@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\BroadcastUserData;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -16,6 +17,9 @@ class UserController extends Controller
             $users = User::search()
                 ->select(['id', 'name', 'email', 'email_verified_at'])
                 ->paginate($perPage);
+
+            // Broadcast user data.
+            broadcast(new BroadcastUserData($users));
 
             return $this->response(true, 'User Lists!', 200, $users);
         } catch (\Exception $e) {
