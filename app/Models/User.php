@@ -47,6 +47,17 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
+     * Global search scope.
+     *
+     * @param $query
+     * @return mixed
+     */
+    public function scopeSearch($query)
+    {
+        return empty(request()->search) ? $query : $query->where('name', 'LIKE', '%' . request()->search . '%')->orWhere('email', 'LIKE', '%' . request()->search . '%');
+    }
+
+    /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
      * @return mixed
